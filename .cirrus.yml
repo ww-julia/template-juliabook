@@ -8,7 +8,7 @@ jupyter_book_task:
     cpu: 2
     memory: 8G
     use_in_memory_disk: true
-  syspkg_script: apt update -q && apt install -qqy git parallel wget
+  syspkg_script: apt-get update -q && apt-get install -qqy git parallel wget
   pip_cache:
     folder: ~/.cache/pip
     fingerprint_script: echo $PYTHON_VERSION && cat requirements.txt .ci/requirements.txt
