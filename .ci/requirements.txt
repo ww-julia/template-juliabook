@@ -1,3 +1,2 @@
 jupyter-book==0.13.1
-jill==0.11.1
 ghp-import==2.1.0

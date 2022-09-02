@@ -8,13 +8,14 @@ jupyter_book_task:
     cpu: 2
     memory: 8G
     use_in_memory_disk: true
-  syspkg_script: apt update -q && apt install -qqy git parallel
+  syspkg_script: apt update -q && apt install -qqy git parallel curl
   pip_cache:
     folder: ~/.cache/pip
     fingerprint_script: echo $PYTHON_VERSION && cat requirements.txt .ci/requirements.txt
     populate_script: pip install -r requirements.txt -r .ci/requirements.txt
   install_julia_script: |
-    jill install ${JULIA_VER} --confirm
+    curl -fsSL https://raw.githubusercontent.com/abelsiqueira/jill/main/jill.sh > jill.sh
+    bash jill.sh --version ${JULIA_VER} --yes
     julia --version
   jupkg_cache:
     folder: ~/.julia
