@@ -20,7 +20,7 @@ jupyter_book_task:
   jupkg_cache:
     folder: ~/.julia
     fingerprint_script: cat Manifest.toml
-  julia_script: |
+  julia_pakcages_script: |
     julia --color=yes --project="" -e 'import Pkg; Pkg.add("IJulia"); Pkg.build("IJulia")'
     julia --color=yes --project=@. -e 'import Pkg; Pkg.instantiate()'
   notebook_script: |
