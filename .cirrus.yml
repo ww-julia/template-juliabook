@@ -1,0 +1,34 @@
+jupyter_book_task:
+  env:
+    JULIA_VER: "1.8.0"
+    JULIA_NUM_THREADS: "2"
+  auto_cancellation: true
+  container:
+    image: python:3.10-slim
+    cpu: 2
+    memory: 8G
+    use_in_memory_disk: true
+  syspkg_script: apt update -q && apt install -qqy git parallel
+  pip_cache:
+    folder: ~/.cache/pip
+    fingerprint_script: echo $PYTHON_VERSION && cat requirements.txt .ci/requirements.txt
+    populate_script: pip install -r requirements.txt -r .ci/requirements.txt
+  install_julia_script: |
+    jill install ${JULIA_VER} --confirm
+    julia --version
+  jupkg_cache:
+    folder: ~/.julia
+    fingerprint_script: cat Manifest.toml
+  julia_script: |
+    julia --color=yes --project="" -e 'import Pkg; Pkg.add("IJulia"); Pkg.build("IJulia")'
+    julia --color=yes --project=@. -e 'import Pkg; Pkg.instantiate()'
+  notebook_script: |
+    parallel -j2 jupyter nbconvert --to notebook --ExecutePreprocessor.timeout=600 --execute --inplace {} ::: docs/*.ipynb
+  build_script: |
+    jupyter-book build docs --warningiserror --keep-going -v
+
+  # pages_script: |
+  #   if [[ $CIRRUS_BRANCH == "main" ]]; then
+  #     ghp-import -n docs/_build/html
+  #     git push -fq https://${GH_TOKEN}@github.com/${CIRRUS_REPO_FULL_NAME}.git gh-pages
+  #   fi
