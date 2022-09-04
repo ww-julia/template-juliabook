@@ -8,24 +8,23 @@ jupyter_book_task:
     image: python:3.10-slim
     cpu: 2
     memory: 8G
-    use_in_memory_disk: true
-  syspkg_script: apt-get update -q && apt-get install -qqy git parallel wget
+  sysPKG_script: apt-get update -q && apt-get install -qqy git parallel wget
   pip_cache:
     folder: ~/.cache/pip
     fingerprint_script: echo $PYTHON_VERSION && cat requirements.txt .ci/requirements.txt
-  python_packages_script: |
+  pyPKG_script: |
     pip install -r requirements.txt -r .ci/requirements.txt
   install_julia_script: |
     wget https://raw.githubusercontent.com/abelsiqueira/jill/main/jill.sh
     bash jill.sh --version ${JULIA_VER} --yes
     julia --version
-  jupkg_cache:
+  julia_cache:
     folder: ~/.julia
     fingerprint_script: cat Manifest.toml
-  julia_packages_script: |
+  juPKG_script: |
     julia --color=yes --project="" -e 'import Pkg; Pkg.add("IJulia"); Pkg.build("IJulia")'
     julia --color=yes --project=@. -e 'import Pkg; Pkg.instantiate()'
-  notebook_script: |
+  execute_script: |
     parallel -j2 jupyter nbconvert --to notebook --ExecutePreprocessor.timeout=600 --execute --inplace {} ::: docs/*.ipynb
   build_script: |
     jupyter-book build docs --warningiserror --keep-going -v
