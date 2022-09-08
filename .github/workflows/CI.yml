@@ -29,9 +29,7 @@ jobs:
           cache: 'pip'
           cache-dependency-path: '**/requirements.txt'
       - name: Install Python dependencies
-        run: |
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          if [ -f .ci/requirements.txt ]; then pip install -r .ci/requirements.txt; fi
+        run: pip install -r requirements.txt -r .ci/requirements.txt
       - name: Setup Julia ${{ env.JULIA_VER }}
         uses: julia-actions/setup-julia@v1
         with:
@@ -47,14 +45,14 @@ jobs:
         run: |
           julia --color=yes --project="" -e 'import Pkg; Pkg.add("IJulia"); Pkg.build("IJulia")'
           julia --color=yes --project=@. -e 'import Pkg; Pkg.instantiate()'
-      - name: Setup Pages
-        id: pages
-        uses: actions/configure-pages@v2
       - name: Run Notebooks
         run: |
           parallel -j2 jupyter nbconvert --to notebook --ExecutePreprocessor.timeout=600 --execute --inplace {} ::: docs/*.ipynb
       - name: Build website
         run: jupyter-book build docs --warningiserror --keep-going -v
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v2
       - name: Upload page artifact
         uses: actions/upload-pages-artifact@v1
         with:

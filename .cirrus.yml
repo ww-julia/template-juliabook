@@ -3,16 +3,17 @@ jupyter_book_task:
     JULIA_VER: "1.8.0"
     JULIA_NUM_THREADS: "2"
     LC_ALL: "C"
+    NJOBS: "2"
   auto_cancellation: true
   container:
     image: python:3.10-slim
     cpu: 2
     memory: 8G
-  sysPKG_script: apt-get update -q && apt-get install -qqy git parallel wget
+  syspkg_script: apt-get update -q && apt-get install -qqy git parallel wget
   pip_cache:
     folder: ~/.cache/pip
     fingerprint_script: echo $PYTHON_VERSION && cat requirements.txt .ci/requirements.txt
-  pyPKG_script: |
+  pypkg_script: |
     pip install -r requirements.txt -r .ci/requirements.txt
   install_julia_script: |
     wget https://raw.githubusercontent.com/abelsiqueira/jill/main/jill.sh
@@ -21,11 +22,11 @@ jupyter_book_task:
   julia_cache:
     folder: ~/.julia
     fingerprint_script: cat Manifest.toml
-  juPKG_script: |
+  jupkg_script: |
     julia --color=yes --project="" -e 'import Pkg; Pkg.add("IJulia"); Pkg.build("IJulia")'
     julia --color=yes --project=@. -e 'import Pkg; Pkg.instantiate()'
   execute_script: |
-    parallel -j2 jupyter nbconvert --to notebook --ExecutePreprocessor.timeout=600 --execute --inplace {} ::: docs/*.ipynb
+    parallel -j${NJOBS} jupyter nbconvert --to notebook --ExecutePreprocessor.timeout=600 --execute --inplace {} ::: docs/*.ipynb
   build_script: |
     jupyter-book build docs --warningiserror --keep-going -v
   # Requires a PAT `GH_TOKEN` with repo scope
