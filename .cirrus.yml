@@ -1,6 +1,6 @@
 jupyter_book_task:
   env:
-    JULIA_VER: "1.8.0"
+    JULIA_VER: "1.8.1"
     JULIA_NUM_THREADS: "2"
     LC_ALL: "C"
     NJOBS: "2"
