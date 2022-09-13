@@ -10,9 +10,6 @@ jupyter_book_task:
     cpu: 2
     memory: 8G
   syspkg_script: apt-get update -q && apt-get install -qqy git parallel wget
-  pip_cache:
-    folder: ~/.cache/pip
-    fingerprint_script: echo $PYTHON_VERSION && cat requirements.txt .ci/requirements.txt
   pypkg_script: |
     pip install -r requirements.txt -r .ci/requirements.txt
   install_julia_script: |
