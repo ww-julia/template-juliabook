@@ -17,7 +17,7 @@ env:
   JULIA_CACHE: '1'
 
 jobs:
-  jupyter-book:
+  ci:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
