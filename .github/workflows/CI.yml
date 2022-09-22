@@ -12,7 +12,7 @@ concurrency:
 
 env:
   JULIA_NUM_THREADS: 2
-  PYTHON_VER: '3.10'
+  PYTHON_VER: '3.10.7'
   JULIA_VER: '1.8.1'
   JULIA_CACHE: '1'
 
@@ -29,7 +29,9 @@ jobs:
           cache: 'pip'
           cache-dependency-path: '**/requirements.txt'
       - name: Install Python dependencies
-        run: pip install -r requirements.txt -r .ci/requirements.txt
+        run: |
+          pip ibstall -U pip wheel setuptools
+          pip install -r requirements.txt -r .ci/requirements.txt
       - name: Setup Julia ${{ env.JULIA_VER }}
         uses: julia-actions/setup-julia@v1
         with:
