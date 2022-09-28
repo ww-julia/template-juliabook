@@ -24,14 +24,14 @@ jobs:
         uses: actions/checkout@v3
       - name: Setup Python ${{ env.PYTHON_VER }}
         uses: actions/setup-python@v4
+        id: cp310
         with:
           python-version: ${{ env.PYTHON_VER }}
           cache: 'pip'
-          cache-dependency-path: '**/requirements.txt'
       - name: Install Python dependencies
         run: |
           pip install -U pip wheel setuptools
-          pip install -r requirements.txt -r .ci/requirements.txt
+          pip install -r requirements.txt
       - name: Setup Julia ${{ env.JULIA_VER }}
         uses: julia-actions/setup-julia@v1
         with:
@@ -44,6 +44,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-julia-${{ env.JULIA_CACHE }}-
       - name: Install Julia deps
+        env:
+          PYTHON: ${{ steps.cp310.outputs.python-path }}
         run: |
           julia --color=yes --project="" -e 'import Pkg; Pkg.add(["PyCall", "IJulia"]); Pkg.build(["PyCall", "IJulia"])'
           julia --color=yes --project=@. -e 'import Pkg; Pkg.instantiate()'
