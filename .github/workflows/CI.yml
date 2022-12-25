@@ -49,15 +49,18 @@ jobs:
         run: |
           julia --color=yes --project="" -e 'import Pkg; Pkg.add(["PyCall", "IJulia"]); Pkg.build(["PyCall", "IJulia"])'
           julia --color=yes --project=@. -e 'import Pkg; Pkg.instantiate()'
-      - name: Run Notebooks
-        run: |
-          parallel -j2 jupyter nbconvert --to notebook --ExecutePreprocessor.timeout=600 --execute --inplace {} ::: docs/*.ipynb
+      - name: Cache Jupyter Book output
+        uses: actions/cache@v3
+        with:
+          path: _build/.jupyter_cache
+          key: ${{ runner.os }}-jb-$${{ hashFiles('**/Manifest.toml') }}
       - name: Build website
         run: jupyter-book build docs --warningiserror --keep-going -v
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v2
       - name: Upload page artifact
+        if: github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v1
         with:
           path: docs/_build/html
