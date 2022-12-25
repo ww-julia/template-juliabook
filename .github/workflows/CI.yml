@@ -52,7 +52,7 @@ jobs:
       - name: Cache Jupyter Book output
         uses: actions/cache@v3
         with:
-          path: _build/.jupyter_cache
+          path: docs/_build/.jupyter_cache
           key: ${{ runner.os }}-jb-$${{ hashFiles('**/Manifest.toml') }}
       - name: Build website
         run: jupyter-book build docs --warningiserror --keep-going -v
