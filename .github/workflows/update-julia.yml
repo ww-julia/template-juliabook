@@ -16,7 +16,7 @@ env:
   JULIA_VER: '1.8.4'
 
 jobs:
-  update-notebook:
+  update-julia-deps:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
