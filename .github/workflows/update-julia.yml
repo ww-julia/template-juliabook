@@ -12,18 +12,17 @@ on:
 
 env:
   JULIA_PKG_PRECOMPILE_AUTO: '0'
+  JULIA_NUM_THREADS: 2
+  JULIA_VER: '1.8.4'
 
 jobs:
   update-notebook:
     runs-on: ubuntu-latest
-    container:
-      image: julia:1.8.4
     steps:
-      - run: apt-get update && apt-get install -y --no-install-recommends git
       - name: Checkout
         uses: actions/checkout@v3
       - name: Update Julia dependencies
-        run: julia --color=yes --project=@. --threads=auto -e 'import Pkg; Pkg.update()'
+        run: julia --color=yes --project=@. -e 'import Pkg; Pkg.update()'
       - uses: tibdex/github-app-token@v1
         id: generate-token
         with:
