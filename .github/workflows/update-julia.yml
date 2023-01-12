@@ -13,7 +13,7 @@ on:
 env:
   JULIA_PKG_PRECOMPILE_AUTO: '0'
   JULIA_NUM_THREADS: 2
-  JULIA_VER: '1.8.4'
+  JULIA_VER: '1.8.5'
 
 jobs:
   update-julia-deps:
