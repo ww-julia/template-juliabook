@@ -46,13 +46,6 @@ jobs:
           PYTHON: ${{ steps.python.outputs.python-path }}
         run: |
           julia --color=yes --project=@. -e 'import Pkg; Pkg.instantiate(); Pkg.build("IJulia")'
-      - name: Cache Jupyter Book output
-        uses: actions/cache@v3
-        with:
-          path: docs/_build/.jupyter_cache
-          key: ${{ runner.os }}-jb-${{ hashFiles('**/Manifest.toml') }}-${{ hashFiles('**/*.ipynb') }}
-          restore-keys: |
-            ${{ runner.os }}-jb-${{ hashFiles('**/Manifest.toml') }}-
       - name: Build website
         run: jupyter-book build docs/ --warningiserror --keep-going -v
       - name: Setup Pages
